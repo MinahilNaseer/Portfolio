@@ -857,6 +857,9 @@ section,
   background: var(--background-color);
   border: 2px solid var(--accent-color);
 }
+.resume-item:hover{
+  cursor: pointer;
+}
 
 /*--------------------------------------------------------------
 # Services Section
@@ -1007,6 +1010,9 @@ section,
 
 .portfolio .portfolio-item {
   position: relative;
+}
+.portfolio-item:hover{
+  cursor: pointer;
 }
 
 .portfolio .portfolio-item .portfolio-info {

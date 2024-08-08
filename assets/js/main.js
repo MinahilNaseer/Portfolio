@@ -250,3 +250,7 @@
 
 })();
 
+/**Navigation of projects pages */
+document.getElementById('vibz-pro').addEventListener('click', function() {
+  window.location.href = 'project1.html';
+});
