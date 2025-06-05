@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useRef } from "react";
 import { motion } from "framer-motion";
 import { FaReact, FaPython, FaNodeJs, FaCss3Alt, FaHtml5, FaGitAlt, FaPowerOff, FaMicrosoft } from "react-icons/fa";
 import { SiTailwindcss, SiFlutter, SiFirebase } from "react-icons/si";
 
-const Button = ({ children, className }) => (
+const Button = ({ children, className, onClick }) => (
   <motion.button
+    onClick={onClick}
     whileHover={{ scale: 1.05 }}
     whileTap={{ scale: 0.95 }}
     className={`px-6 py-3 rounded-md font-semibold transition duration-300 ${className}`}
@@ -96,6 +97,12 @@ const techStack = [
 
 
 export default function PortfolioLanding() {
+     const contactRef = useRef(null);
+  const workRef = useRef(null);
+
+  const scrollToContact = () => contactRef.current?.scrollIntoView({ behavior: 'smooth' });
+  const scrollToWork = () => workRef.current?.scrollIntoView({ behavior: 'smooth' });
+
   return (
     <div className="bg-black text-white min-h-screen">
       {/* Hero Section - Fullscreen */}
@@ -107,7 +114,7 @@ export default function PortfolioLanding() {
       >
         <div className="max-w-2xl text-center space-y-6">
           <h1 className="text-5xl md:text-6xl font-extrabold leading-tight">
-            Hi, I'm Minahil Nasser<br />
+            Hi, I'm Minahil Naseer<br />
             <motion.span
               className="text-indigo-400"
               initial={{ opacity: 0 }}
@@ -121,8 +128,8 @@ export default function PortfolioLanding() {
             A passionate software engineer and ML enthusiast who builds intelligent and user-friendly web and mobile applications.
           </p>
           <div className="flex flex-col md:flex-row gap-4 justify-center mt-6">
-            <Button className="bg-white text-black hover:bg-gray-200">Hire me</Button>
-            <Button className="border border-white text-white hover:bg-white hover:text-black">See my work</Button>
+            <Button className="bg-white text-black hover:bg-gray-200" onClick={scrollToContact}>Hire me</Button>
+            <Button className="border border-white text-white hover:bg-white hover:text-black" onClick={scrollToWork}>See my work</Button>
           </div>
         </div>
       </motion.div>
@@ -130,7 +137,7 @@ export default function PortfolioLanding() {
       {/* Selected Work Section */}
       <section className="px-8 py-20">
         <h2 className="text-4xl font-bold text-center mb-12">Selected Work</h2>
-        <div className="flex flex-col gap-20">
+        <div className="flex flex-col gap-20" ref={workRef}>
           {projects.map((proj, i) => (
             <motion.div
               key={i}
@@ -199,8 +206,8 @@ export default function PortfolioLanding() {
       </div>
     </section>
     {/* Resume Download & Contact Section */}
-      <section className="bg-black px-8 py-20 text-center">
-        <div className="mb-12">
+      <section className="bg-black px-8 py-20 text-center" >
+        <div className="mb-12" ref={contactRef}>
           <h2 className="text-4xl font-bold mb-4">Download Resume</h2>
           <a
             href="/resume/Minahil-Naseer.pdf"
@@ -227,6 +234,45 @@ export default function PortfolioLanding() {
           </div>
         </div>
       </section>
+      {/* Contact Form Section */}
+      <section className="bg-gray-900 px-8 py-20">
+        <h2 className="text-4xl font-bold text-center mb-12">Send Message</h2>
+        <div className="max-w-5xl mx-auto flex flex-col md:flex-row bg-[#0a0a0a] rounded-lg overflow-hidden">
+          <div className="w-full md:w-1/2 p-6 border-r border-gray-800 space-y-6">
+            <span className="inline-block text-xs font-semibold text-red-500 bg-red-950 rounded-full px-3 py-1 border border-red-500 mb-2">
+              ● Available for hire
+            </span>
+            <p className="text-sm text-gray-400 leading-relaxed">
+              As a software engineer, I construct web interfaces and design systems with a special love for accessibility and performance. I tend to code things from scratch and enjoy bringing ideas to life.
+            </p>
+            <p className="text-sm text-gray-400 leading-relaxed">
+              I'm also an open-source developer, and in my spare time, I do digital art with my iPad Pro.
+            </p>
+            <img src="/images/signature.png" alt="signature" className="w-40 pt-4" />
+          </div>
+          <form className="w-full md:w-1/2 p-6 space-y-6">
+            <div>
+              <label htmlFor="name" className="block text-sm font-medium text-gray-200">Name</label>
+              <input type="text" id="name" name="name" className="w-full mt-1 bg-transparent border-b border-gray-700 text-sm py-2 text-white focus:outline-none" />
+            </div>
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-200">Email</label>
+              <input type="email" id="email" name="email" className="w-full mt-1 bg-transparent border-b border-gray-700 text-sm py-2 text-white focus:outline-none" />
+            </div>
+            <div>
+              <label htmlFor="message" className="block text-sm font-medium text-gray-200">How can I help you?</label>
+              <textarea id="message" name="message" rows="4" className="w-full mt-1 bg-transparent border-b border-gray-700 text-sm py-2 text-white focus:outline-none" />
+            </div>
+            <button
+              type="submit"
+              className="mt-4 bg-white text-black font-semibold py-2 px-6 rounded hover:bg-gray-300 transition"
+            >
+              Send
+            </button>
+          </form>
+        </div>
+      </section>
+
 
       {/* Footer */}
       <footer className="bg-gray-950 text-center text-sm text-gray-500 py-6">
