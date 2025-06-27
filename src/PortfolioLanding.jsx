@@ -136,7 +136,7 @@ export default function PortfolioLanding() {
 
       {/* Selected Work Section */}
       <section className="px-8 py-20">
-        <h2 className="text-4xl font-bold text-center mb-12">Selected Work</h2>
+        <h2 className="text-4xl font-bold text-center mb-12">Projects Worked On</h2>
         <div className="flex flex-col gap-20" ref={workRef}>
           {projects.map((proj, i) => (
             <motion.div
