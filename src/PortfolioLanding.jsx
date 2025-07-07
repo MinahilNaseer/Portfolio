@@ -1,7 +1,13 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { FaReact, FaPython, FaNodeJs, FaCss3Alt, FaHtml5, FaGitAlt, FaPowerOff, FaMicrosoft } from "react-icons/fa";
 import { SiTailwindcss, SiFlutter, SiFirebase } from "react-icons/si";
+import { db } from '../src/firebase/config';
+import { collection, getDocs, addDoc } from 'firebase/firestore';
+import { getProjects } from "./services/projects";
+import emailjs from '@emailjs/browser';
+
+
 
 const Button = ({ children, className, onClick }) => (
   <motion.button
@@ -13,73 +19,6 @@ const Button = ({ children, className, onClick }) => (
     {children}
   </motion.button>
 );
-
-const projects = [
-  {
-    title: "DREAM: Learning Disability Detection App",
-    description:
-      "A mobile application to detect dyslexia, dysgraphia, and dyscalculia in children using ML & DL models. Built with Flutter, Firebase, Flask, and deployed via Hugging Face and Render.",
-    stack: ["Flutter", "Firebase", "Python", "CNN", "Logistic Regression"],
-    video: "/videos/demo-dream.mp4",
-    github: "https://github.com/MinahilNaseer/DREAM"
-  },
-  {
-    title: "Encryption Analyzer (WinForms)",
-    description:
-      "C# Windows app to compare RSA and AES encryption protocols with speed and accuracy benchmarks.",
-    stack: ["C#", "WinForms", "DES", "AES"],
-    image: "/images/AESDES.jpeg",
-  },
-  {
-    title: "Retail Sales Dashboard",
-    description:
-      "A dynamic Power BI dashboard showcasing key retail metrics such as total revenue, total orders, top-selling products, customer insights, and revenue distribution across countries. Designed for business decision-making and performance monitoring.",
-    stack: ["Power BI", "DAX", "Data Visualization"],
-    image: "/images/dashboard-retail.png",
-  },
-   {
-    title: "Task Management System",
-    description:
-      "A web-based task management app enabling users to create, update, and delete tasks with authentication and local storage.",
-    stack: ["ReactJs", "Tailwindcss", "Postcss"],
-    image: "/images/task-manage.jpeg",
-    github: "https://github.com/MinahilNaseer/Task-Management"
-  },
-  {
-    title: "Music Player App",
-    description:
-      "An interactive web-based music player with controls for play, pause, next, and previous, built using HTML5 Audio API.",
-    stack: ["Reactjs","Tailwindcss","Postcss", "NodeJs", "Express","Machine Learning (Recommendation System)","Microsoft Azure","Music API"],
-    image: "/images/dash.jpg",
-    github: "https://github.com/MinahilNaseer/Music-Player"
-  },
-  {
-    title: "Loan Prediction using Machine Learning",
-    description:
-      "A machine learning model that predicts loan approval status based on applicant attributes. Implemented with Python and scikit-learn.",
-    stack: ["Python", "scikit-learn", "Pandas","Machine Learning"],
-    image: "/images/loan-Pre.png",
-    github: "https://github.com/MinahilNaseer/Loan-Prediciton-using-ML"
-  },
-  {
-    title: "Weather Dashboard",
-    description:
-      "A weather forecast web app that fetches real-time weather data using OpenWeatherMap API. Users can search and view current weather and forecasts.",
-    stack: ["HTML", "CSS", "JavaScript", "Weather API","Node.js","Express.js"],
-    image: "/images/weather.jpeg",
-    github: "https://github.com/MinahilNaseer/WeatherDashboard"
-  },
-  {
-    title: "Recipe App",
-    description:
-      "A simple and user-friendly recipe application that displays recipes with ingredients and instructions fetched via an external API.",
-    stack: ["Flutter", "Firebase", "Android Studio"],
-    image: "/images/food-dash.jpg",
-    github: "https://github.com/MinahilNaseer/App-Recipe",
-    isMobile: true
-
-  }
-];
 
 const techStack = [
   { name: "React", icon: <FaReact /> },
@@ -96,12 +35,86 @@ const techStack = [
 ];
 
 
-export default function PortfolioLanding() {
-     const contactRef = useRef(null);
+const PortfolioLanding = () => {
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const contactRef = useRef(null);
   const workRef = useRef(null);
 
   const scrollToContact = () => contactRef.current?.scrollIntoView({ behavior: 'smooth' });
   const scrollToWork = () => workRef.current?.scrollIntoView({ behavior: 'smooth' });
+
+  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
+  const [formStatus, setFormStatus] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setFormStatus("Sending...");
+
+    if (!formData.name || !formData.email || !formData.message) {
+      setFormStatus("Please fill all fields.");
+      return;
+    }
+
+    try {
+      await addDoc(collection(db, "messages"), {
+        ...formData,
+        timestamp: new Date(),
+      });
+      try {
+        await addDoc(collection(db, "messages"), {
+          ...formData,
+          timestamp: new Date(),
+        });
+
+        await emailjs.send(
+          "service_2ewf699",           // Replace with your real ID
+          "template_jnkopz9",          // Replace with your real template
+          {
+            name: formData.name,
+            email: formData.email,
+            message: formData.message,
+            title: "New Portfolio Message"
+          },
+          "amLjy0aJPn-6EyT4h"          // Your public key
+        );
+
+
+
+        setFormStatus("Message sent successfully!");
+        setFormData({ name: "", email: "", message: "" });
+
+      } catch (error) {
+        console.error("EmailJS or Firestore error:", error);
+        setFormStatus("Failed to send message.");
+      }
+
+
+      setFormStatus("Message sent successfully!");
+      setFormData({ name: "", email: "", message: "" });
+    } catch (error) {
+      console.error("Firestore error:", error);
+      setFormStatus("Failed to send message.");
+    }
+  };
+
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getProjects();
+        setProjects(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <div className="bg-black text-white min-h-screen">
@@ -133,14 +146,30 @@ export default function PortfolioLanding() {
           </div>
         </div>
       </motion.div>
+      {/* About Me Section */}
+      <section className="bg-gray-900 text-white px-8 py-20">
+        <h2 className="text-4xl font-bold text-center mb-12">About Me</h2>
+        <div className="max-w-3xl mx-auto text-center">
+          <p className="text-lg text-gray-300 leading-relaxed">
+            A passionate Software Engineering student with hands-on experience in building web and mobile applications using ReactJS and Flutter.
+            Proficient in integrating machine learning models for real-world problems, particularly in educational and healthcare domains.
+            Seeking roles that blend front-end development with AI/ML to deliver impactful, user-centered solutions.
+          </p>
+        </div>
+      </section>
+
+
 
       {/* Selected Work Section */}
       <section className="px-8 py-20">
         <h2 className="text-4xl font-bold text-center mb-12">Projects Worked On</h2>
         <div className="flex flex-col gap-20" ref={workRef}>
+          {loading && <p className="text-center text-gray-400">Loading projects...</p>}
+          {error && <p className="text-center text-red-500">Error: {error}</p>}
+
           {projects.map((proj, i) => (
             <motion.div
-              key={i}
+              key={proj.id || i}
               className={`flex flex-col md:flex-row items-start bg-gray-900 p-8 rounded-xl shadow-lg md:space-x-8 ${proj.isMobile ? 'md:items-center' : ''}`}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -167,50 +196,59 @@ export default function PortfolioLanding() {
               )}
               <div className="w-full md:w-1/2 mt-6 md:mt-0">
                 <h3 className="text-3xl font-bold mb-4 tracking-tight leading-snug">
-                  {proj.title}
+                  {proj.title || 'Untitled Project'}
                 </h3>
-                <p className="text-base text-gray-300 mb-4 leading-relaxed">
-                  {proj.description}
-                </p>
-                <ul className="text-sm text-gray-400 list-disc ml-5 mb-4">
-                  {proj.stack.map((tech, j) => (
-                    <li key={j}>{tech}</li>
-                  ))}
-                </ul>
-                <a
-                  href={proj.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center text-indigo-400 font-semibold hover:underline"
-                >
-                  Explore this project <span className="ml-2">🐱</span>
-                </a>
+                {proj.description && (
+                  <p className="text-base text-gray-300 mb-4 leading-relaxed">
+                    {proj.description}
+                  </p>
+                )}
+                {proj.stack?.length > 0 && (
+                  <ul className="text-sm text-gray-400 list-disc ml-5 mb-4">
+                    {proj.stack.map((tech, j) => (
+                      <li key={j}>{tech}</li>
+                    ))}
+                  </ul>
+                )}
+                {proj.github && (
+                  <a
+                    href={proj.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center text-indigo-400 font-semibold hover:underline"
+                  >
+                    Explore this project <span className="ml-2"></span>
+                  </a>
+                )}
+
               </div>
             </motion.div>
           ))}
         </div>
       </section>
 
+
+
       <section className="bg-gray-900 text-white px-8 py-20">
-      <h2 className="text-4xl font-bold text-center mb-12">Tech Stack</h2>
-      <div className="max-w-4xl mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-8 text-center">
-        {techStack.map((tech, index) => (
-          <div
-            key={index}
-            className="flex flex-col items-center justify-center text-indigo-400 text-4xl hover:scale-110 transition-transform"
-          >
-            {tech.icon}
-            <p className="text-white text-sm mt-2">{tech.name}</p>
-          </div>
-        ))}
-      </div>
-    </section>
-    {/* Resume Download & Contact Section */}
+        <h2 className="text-4xl font-bold text-center mb-12">Tech Stack</h2>
+        <div className="max-w-4xl mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-8 text-center">
+          {techStack.map((tech, index) => (
+            <div
+              key={index}
+              className="flex flex-col items-center justify-center text-indigo-400 text-4xl hover:scale-110 transition-transform"
+            >
+              {tech.icon}
+              <p className="text-white text-sm mt-2">{tech.name}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+      {/* Resume Download & Contact Section */}
       <section className="bg-black px-8 py-20 text-center" >
         <div className="mb-12" ref={contactRef}>
           <h2 className="text-4xl font-bold mb-4">Download Resume</h2>
           <a
-            href="/resume/Minahil-Naseer.pdf"
+            href="/resume/Resume.pdf"
             download
             className="inline-block bg-indigo-500 text-white px-6 py-3 rounded-md font-semibold hover:bg-indigo-600"
           >
@@ -234,6 +272,7 @@ export default function PortfolioLanding() {
           </div>
         </div>
       </section>
+
       {/* Contact Form Section */}
       <section className="bg-gray-900 px-8 py-20">
         <h2 className="text-4xl font-bold text-center mb-12">Send Message</h2>
@@ -250,26 +289,39 @@ export default function PortfolioLanding() {
             </p>
             <img src="/images/signature.png" alt="signature" className="w-40 pt-4" />
           </div>
-          <form className="w-full md:w-1/2 p-6 space-y-6">
+
+          <form className="w-full md:w-1/2 p-6 space-y-6" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-200">Name</label>
-              <input type="text" id="name" name="name" className="w-full mt-1 bg-transparent border-b border-gray-700 text-sm py-2 text-white focus:outline-none" />
+              <input type="text" id="name" name="name" value={formData.name} className="w-full mt-1 bg-transparent border-b border-gray-700 text-sm py-2 text-white focus:outline-none"
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              />
             </div>
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-200">Email</label>
-              <input type="email" id="email" name="email" className="w-full mt-1 bg-transparent border-b border-gray-700 text-sm py-2 text-white focus:outline-none" />
+              <input type="email" id="email" name="email" value={formData.email} className="w-full mt-1 bg-transparent border-b border-gray-700 text-sm py-2 text-white focus:outline-none"
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              />
             </div>
             <div>
               <label htmlFor="message" className="block text-sm font-medium text-gray-200">How can I help you?</label>
-              <textarea id="message" name="message" rows="4" className="w-full mt-1 bg-transparent border-b border-gray-700 text-sm py-2 text-white focus:outline-none" />
+              <textarea id="message" name="message" value={formData.message} rows="4" className="w-full mt-1 bg-transparent border-b border-gray-700 text-sm py-2 text-white focus:outline-none"
+                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+              />
             </div>
             <button
               type="submit"
-              className="mt-4 bg-white text-black font-semibold py-2 px-6 rounded hover:bg-gray-300 transition"
+              disabled={formStatus === "Sending..."}
+              className={`mt-4 font-semibold py-2 px-6 rounded transition ${formStatus === "Sending..." ? "bg-gray-400 text-black cursor-not-allowed" : "bg-white text-black hover:bg-gray-300"
+                }`}
             >
-              Send
+              {formStatus === "Sending..." ? "Sending..." : "Send"}
             </button>
+
+            {formStatus && <p className="text-sm text-center text-green-400">{formStatus}</p>}
           </form>
+
+
         </div>
       </section>
 
@@ -282,3 +334,4 @@ export default function PortfolioLanding() {
   );
 }
 
+export default PortfolioLanding;
