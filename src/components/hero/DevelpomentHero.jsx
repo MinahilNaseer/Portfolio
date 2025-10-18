@@ -38,13 +38,13 @@ const DevelopmentHero = ({ scrollToContact, scrollToWork }) => {
             className="bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 shadow-lg"
             onClick={scrollToContact}
           >
-            <span className="flex items-center gap-2">💼 Hire Me</span>
+            <span className="flex items-center gap-2">Hire Me</span>
           </Button>
           <Button 
             className="border-2 border-white text-white hover:bg-white hover:text-black transition-all duration-300 shadow-lg"
             onClick={scrollToWork}
           >
-            <span className="flex items-center gap-2">🚀 See My Work</span>
+            <span className="flex items-center gap-2">See My Work</span>
           </Button>
         </motion.div>
 
