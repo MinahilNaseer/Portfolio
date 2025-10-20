@@ -6,6 +6,7 @@ import emailjs from '@emailjs/browser';
 import SplitScreenHero from './components/hero/SplitScreenHero';
 import DevelopmentContent from './components/layout/DevelopmentContent';
 import AnalyticsContent from './components/layout/AnalyticsContent';
+import { initializeAnalyticsProjects } from './services/firebaseAnalyticsService';
 
 const PortfolioLanding = () => {
   const [activeSection, setActiveSection] = useState(null);
@@ -69,6 +70,12 @@ const PortfolioLanding = () => {
     };
 
     fetchData();
+  }, []);
+
+  // Add this new useEffect for initializing analytics projects
+  useEffect(() => {
+    // This will automatically upload your projects to Firebase on first load
+    initializeAnalyticsProjects();
   }, []);
 
   return (
