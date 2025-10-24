@@ -12,7 +12,7 @@ export const techStack = [
   { name: "Power BI", icon: FaPowerOff },
   { name: "HTML5", icon: FaHtml5 },
   { name: "CSS3", icon: FaCss3Alt },
-  { name: "Git", icon: FaGitAlt }
+  { name: "Git", icon: FaGitAlt },
 ];
 
 export default techStack;

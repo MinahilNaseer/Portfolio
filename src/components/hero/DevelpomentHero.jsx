@@ -2,8 +2,16 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import Button from '../common/Button';
 import { techStack } from '../../data/techStack';
+import { FaArrowLeft } from 'react-icons/fa';
 
-const DevelopmentHero = ({ scrollToContact, scrollToWork }) => {
+const DevelopmentHero = ({ scrollToContact, scrollToWork, onBack }) => {
+  const handleBackClick = () =>{
+    if(onBack){
+      onBack();
+    }else{
+      window.history.back();
+    }
+  }
   return (
     <motion.div
       className="h-screen px-6 py-20 flex flex-col items-center justify-center relative overflow-hidden"
@@ -11,6 +19,19 @@ const DevelopmentHero = ({ scrollToContact, scrollToWork }) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 1 }}
     >
+            <motion.button
+        onClick={handleBackClick}
+        className="absolute top-6 left-6 z-20 flex items-center gap-2 text-gray-400 hover:text-white transition-colors duration-300 bg-gray-800/50 hover:bg-gray-700/50 p-3 rounded-full backdrop-blur-sm"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.5 }}
+      >
+        <FaArrowLeft className="text-lg" />
+        <span className="text-sm font-medium">Back</span>
+      </motion.button>
+
       <div className="absolute inset-0">
         <div className="absolute top-0 left-0 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse" />
         <div className="absolute top-0 right-0 w-72 h-72 bg-yellow-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse animation-delay-2000" />

@@ -18,12 +18,13 @@ const DevelopmentContent = ({
   formData,
   setFormData,
   formStatus,
-  handleSubmit 
+  handleSubmit,
+  onBack
 }) => (
   <div id="development-content" className="min-h-screen bg-gradient-to-b from-gray-900 to-black">
-    <DevelopmentHero scrollToContact={scrollToContact} scrollToWork={scrollToWork} />
+    <DevelopmentHero scrollToContact={scrollToContact} scrollToWork={scrollToWork} onBack={onBack}/>
     <AboutMeSection />
-    <ProjectsSection ref={workRef} projects={projects} loading={loading} error={error} />
+    <ProjectsSection ref={workRef} projects={projects} loading={loading} error={error} activeTab="development"/>
     <TechStackSection />
     <ResumeSection ref={contactRef} />
     <ContactFormSection 

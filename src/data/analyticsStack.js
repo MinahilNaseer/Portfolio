@@ -9,7 +9,7 @@ export const analyticsStack = [
   { name: "Pandas", icon: SiPandas },
   { name: "TensorFlow", icon: SiTensorflow },
   { name: "Data Visualization", icon: FaChartLine },
-  { name: "Statistical Analysis", icon: FaChartBar }
+  { name: "Statistical Analysis", icon: FaChartBar },
 ];
 
 export default analyticsStack;

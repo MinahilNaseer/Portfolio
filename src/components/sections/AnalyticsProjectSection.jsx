@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { FaGithub, FaLinkedin, FaExternalLinkAlt, FaFilePdf, FaImage, FaVideo, FaTools, FaPlay, FaPause } from 'react-icons/fa';
 import { getAnalyticsProjectsFromFirebase } from '../../services/firebaseAnalyticsService';
+import { developmentExperience, analyticsExperience } from '../../data/experienceData';
+import { developmentCertifications, analyticsCertifications } from '../../data/certificationsData';
 
 const AnalyticsProjectsSection = () => {
   const [projects, setProjects] = useState([]);
@@ -381,6 +383,66 @@ const AnalyticsProjectsSection = () => {
           </>
         )}
       </div>
+      {/* Experience & Certifications for Analytics */}
+<div className="mt-20">
+  <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+    {/* Analytics Experience */}
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+    >
+      <h3 className="text-3xl font-bold mb-8 text-green-400">Analytics Experience</h3>
+      <div className="space-y-6">
+        {analyticsExperience.map((exp, index) => (
+          <div key={exp.id} className="bg-gray-800 p-6 rounded-xl border-l-4 border-green-500">
+            <div className="flex justify-between items-start mb-3">
+              <h4 className="text-xl font-bold text-white">{exp.role}</h4>
+              <span className="text-green-400 text-sm font-semibold">{exp.period}</span>
+            </div>
+            <p className="text-gray-300 font-medium mb-2">{exp.company}</p>
+            <p className="text-gray-400 text-sm mb-3">{exp.location}</p>
+            <p className="text-gray-300 mb-4">{exp.description}</p>
+            <div className="flex flex-wrap gap-2">
+              {exp.skills.map((skill, i) => (
+                <span key={i} className="bg-gray-700 text-green-400 px-3 py-1 rounded-full text-sm">
+                  {skill}
+                </span>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </motion.div>
+
+    {/* Analytics Certifications */}
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+    >
+      <h3 className="text-3xl font-bold mb-8 text-green-400">Analytics Certifications</h3>
+      <div className="space-y-6">
+        {analyticsCertifications.map((cert, index) => (
+          <div key={cert.id} className="bg-gray-800 p-6 rounded-xl border border-gray-700 hover:border-green-500 transition-colors">
+            <div className="flex justify-between items-start mb-3">
+              <h4 className="text-lg font-bold text-white">{cert.title}</h4>
+              <span className="text-green-400 text-sm font-semibold">{cert.date}</span>
+            </div>
+            <p className="text-gray-300 font-medium mb-3">{cert.issuer}</p>
+            <div className="flex flex-wrap gap-2">
+              {cert.skills.map((skill, i) => (
+                <span key={i} className="bg-gray-700 text-blue-400 px-2 py-1 rounded text-xs">
+                  {skill}
+                </span>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </motion.div>
+  </div>
+</div>
     </section>
   );
 };

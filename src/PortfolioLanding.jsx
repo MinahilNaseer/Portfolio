@@ -15,10 +15,8 @@ const PortfolioLanding = () => {
   const [error, setError] = useState(null);
   const contactRef = useRef(null);
   const workRef = useRef(null);
-
   const scrollToContact = () => contactRef.current?.scrollIntoView({ behavior: 'smooth' });
   const scrollToWork = () => workRef.current?.scrollIntoView({ behavior: 'smooth' });
-
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [formStatus, setFormStatus] = useState("");
 
@@ -72,9 +70,9 @@ const PortfolioLanding = () => {
     fetchData();
   }, []);
 
-  // Add this new useEffect for initializing analytics projects
+  
   useEffect(() => {
-    // This will automatically upload your projects to Firebase on first load
+    
     initializeAnalyticsProjects();
   }, []);
 
@@ -94,9 +92,24 @@ const PortfolioLanding = () => {
           setFormData={setFormData}
           formStatus={formStatus}
           handleSubmit={handleSubmit}
+          onBack={() => setActiveSection(null)}
         />
       )}
-      {activeSection === 'analytics' && <AnalyticsContent />}
+      {activeSection === 'analytics' && 
+      <AnalyticsContent 
+      onBack={() => setActiveSection(null)} 
+      scrollToContact={scrollToContact}
+          scrollToWork={scrollToWork}
+          projects={projects}
+          loading={loading}
+          error={error}
+          contactRef={contactRef}
+          workRef={workRef}
+          formData={formData}
+          setFormData={setFormData}
+          formStatus={formStatus}
+          handleSubmit={handleSubmit}
+      />}
     </div>
   );
 }

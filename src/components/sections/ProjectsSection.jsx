@@ -1,9 +1,14 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { developmentExperience, analyticsExperience } from '../../data/experienceData';
+import { developmentCertifications, analyticsCertifications } from '../../data/certificationsData';
 
-const ProjectsSection = React.forwardRef(({ projects, loading, error }, ref) => (
+// Add activeTab to the props destructuring
+const ProjectsSection = React.forwardRef(({ projects, loading, error, activeTab }, ref) => (
   <section className="px-8 py-20" ref={ref}>
-    <h2 className="text-4xl font-bold text-center mb-12">Projects Worked On</h2>
+    <h2 className="text-4xl font-bold text-center mb-12">
+      {activeTab === 'development' ? 'Development Projects' : 'Analytics Projects'}
+    </h2>
     <div className="flex flex-col gap-20">
       {loading && <p className="text-center text-gray-400">Loading projects...</p>}
       {error && <p className="text-center text-red-500">Error: {error}</p>}
@@ -73,6 +78,85 @@ const ProjectsSection = React.forwardRef(({ projects, loading, error }, ref) => 
           </div>
         </motion.div>
       ))}
+    </div>
+
+    {/* Experience Section */}
+    <div className="mt-32 mb-32">
+      <h3 className="text-3xl font-bold text-center mb-12">
+        {activeTab === 'development' ? 'Development Experience' : 'Data Analytics Experience'}
+      </h3>
+      <div className="grid gap-8 max-w-4xl mx-auto">
+        {(activeTab === 'development' ? developmentExperience : analyticsExperience).map((exp, index) => (
+          <motion.div
+            key={exp.id}
+            className="bg-gray-800 p-6 rounded-xl border-l-4 border-green-500"
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
+          >
+            <div className="flex justify-between items-start mb-3">
+              <h4 className="text-xl font-bold text-white">{exp.role}</h4>
+              <span className="text-green-400 text-sm font-semibold">{exp.period}</span>
+            </div>
+            <p className="text-gray-300 font-medium mb-2">{exp.company}</p>
+            <p className="text-gray-400 text-sm mb-3">{exp.location}</p>
+            <p className="text-gray-300 mb-4">{exp.description}</p>
+            <div className="flex flex-wrap gap-2">
+              {exp.skills.map((skill, i) => (
+                <span key={i} className="bg-gray-700 text-green-400 px-3 py-1 rounded-full text-sm">
+                  {skill}
+                </span>
+              ))}
+            </div>
+            {exp.certificate && (
+              <div className="mt-4 text-sm text-gray-400">
+                Certificate: {exp.certificate}
+              </div>
+            )}
+          </motion.div>
+        ))}
+      </div>
+    </div>
+
+    {/* Certifications Section - Removed the increased margin from here */}
+    <div>
+      <h3 className="text-3xl font-bold text-center mb-12">
+        {activeTab === 'development' ? 'Development Certifications' : 'Data Analytics Certifications'}
+      </h3>
+      <div className="grid gap-6 max-w-4xl mx-auto">
+        {(activeTab === 'development' ? developmentCertifications : analyticsCertifications).map((cert, index) => (
+          <motion.div
+            key={cert.id}
+            className="bg-gray-800 p-6 rounded-xl border border-gray-700 hover:border-green-500 transition-colors"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
+          >
+            <div className="flex justify-between items-start mb-3">
+              <h4 className="text-lg font-bold text-white">{cert.title}</h4>
+              <span className="text-green-400 text-sm font-semibold">{cert.date}</span>
+            </div>
+            <p className="text-gray-300 font-medium mb-3">{cert.issuer}</p>
+            {cert.description && (
+              <p className="text-gray-400 text-sm mb-4">{cert.description}</p>
+            )}
+            <div className="flex flex-wrap gap-2 mb-3">
+              {cert.skills.map((skill, i) => (
+                <span key={i} className="bg-gray-700 text-blue-400 px-2 py-1 rounded text-xs">
+                  {skill}
+                </span>
+              ))}
+            </div>
+            {cert.file && (
+              <div className="text-sm text-gray-400">
+                File: {cert.file}
+              </div>
+            )}
+          </motion.div>
+        ))}
+      </div>
     </div>
   </section>
 ));
