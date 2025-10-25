@@ -2,9 +2,10 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { analyticsStack } from '../../data/analyticsStack';
 import { FaArrowLeft } from 'react-icons/fa';
+import Button from '../common/Button';
 
 
-const AnalyticsHero = ({onBack}) => {
+const AnalyticsHero = ({scrollToContact, scrollToWork, onBack}) => {
 
    const handleBackClick = () => {
     if(onBack){
@@ -49,6 +50,20 @@ const AnalyticsHero = ({onBack}) => {
           Transforming raw data into actionable insights. Specializing in data visualization, 
           statistical analysis, and predictive modeling to drive business decisions.
         </motion.p>
+        <motion.div className="flex flex-col md:flex-row gap-6 justify-center mt-8" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }}>
+          <Button 
+            className="bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 shadow-lg"
+            onClick={scrollToContact}
+          >
+            <span className="flex items-center gap-2">Hire Me</span>
+          </Button>
+          <Button 
+            className="border-2 border-white text-white hover:bg-white hover:text-black transition-all duration-300 shadow-lg"
+            onClick={scrollToWork}
+          >
+            <span className="flex items-center gap-2">See My Work</span>
+          </Button>
+        </motion.div>
 
         <motion.div className="flex flex-wrap justify-center gap-8 mt-12" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}>
           {analyticsStack.map((tech, index) => {

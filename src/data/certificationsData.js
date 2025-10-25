@@ -6,7 +6,7 @@ export const developmentCertifications = [
     date: "Aug 2025",
     skills: ["Python", "OOP", "Object-Oriented Programming", "DSA"],
     type: "development",
-    file: "public/images/python-cert.png"
+    image: "/images/python-cert.png"
   },
   {
     id: 2,
@@ -15,7 +15,7 @@ export const developmentCertifications = [
     date: "Dec 2024",
     skills: ["Oracle Primavera", "Primavera P6", "Project Management"],
     type: "development",
-    file: "public/images/oracle-cert.png",
+    image: "/images/oracle-cert.png",
     description: "Foundational knowledge in Oracle Primavera P6 for project planning and management"
   }
 ];
@@ -28,7 +28,7 @@ export const analyticsCertifications = [
     date: "Sep 2025",
     skills: ["Tech Career Skills", "Career Path Planning", "Data Analytics", "Data Science"],
     type: "analytics",
-    image: "public/images/Data-Science-Cert.png"
+    image: "/images/Data-Science-Cert.png"
   },
   {
     id: 2,
@@ -37,7 +37,7 @@ export const analyticsCertifications = [
     date: "Sep 2025",
     skills: ["Dashboards", "Microsoft Power BI", "Data Visualization"],
     type: "analytics",
-    image: "public/images/PowerBI-Cert.png"
+    image: "/images/PowerBI-Cert.png"
   },
   {
     id: 3,
@@ -47,6 +47,6 @@ export const analyticsCertifications = [
     skills: ["Oracle Primavera", "Primavera P6", "Project Management"],
     type: "analytics",
     description: "Project management fundamentals applicable to data analytics projects",
-    image: "public/images/oracle-cert.png"
+    image: "/images/oracle-cert.png"
   }
 ];

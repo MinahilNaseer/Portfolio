@@ -7,14 +7,12 @@ import ResumeSection from '../sections/ResumeSection';
 import ContactFormSection from '../sections/ContactFormSection';
 import Footer from '../sections/Footer';
 import AnalyticsStackSection from '../sections/AnalyticsStackSection';
+import AboutMeSection from '../sections/AboutMeSection';
 
 const AnalyticsContent = ({
   onBack,
   scrollToContact, 
   scrollToWork, 
-  projects, 
-  loading, 
-  error, 
   contactRef, 
   workRef,
   formData,
@@ -23,16 +21,17 @@ const AnalyticsContent = ({
   handleSubmit,
 }) => (
   <div id="analytics-content" className="min-h-screen bg-gradient-to-b from-gray-900 to-black">
-    <AnalyticsHero onBack={onBack}/>
-    <AnalyticsProjectsSection />
+    <AnalyticsHero scrollToContact={scrollToContact} scrollToWork={scrollToWork} onBack={onBack}/>
+    <AboutMeSection />
+    <AnalyticsProjectsSection ref={workRef} />
     <AnalyticsStackSection />
     <ResumeSection ref={contactRef} />
-        <ContactFormSection 
-          formData={formData}
-          setFormData={setFormData}
-          formStatus={formStatus}
-          handleSubmit={handleSubmit}
-        />
+    <ContactFormSection 
+      formData={formData}
+      setFormData={setFormData}
+      formStatus={formStatus}
+      handleSubmit={handleSubmit}
+    />
     <Footer />
   </div>
 );

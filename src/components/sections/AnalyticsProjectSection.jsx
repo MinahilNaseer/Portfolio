@@ -1,15 +1,153 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
-import { FaGithub, FaLinkedin, FaExternalLinkAlt, FaFilePdf, FaImage, FaVideo, FaTools, FaPlay, FaPause } from 'react-icons/fa';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FaGithub, FaLinkedin, FaExternalLinkAlt, FaFilePdf, FaImage, FaVideo, FaTools, FaPlay, FaPause, FaExpand, FaTimes } from 'react-icons/fa';
 import { getAnalyticsProjectsFromFirebase } from '../../services/firebaseAnalyticsService';
 import { developmentExperience, analyticsExperience } from '../../data/experienceData';
 import { developmentCertifications, analyticsCertifications } from '../../data/certificationsData';
 
-const AnalyticsProjectsSection = () => {
+// Image Modal Component
+const ImageModal = ({ imageUrl, onClose }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4"
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.8, opacity: 0 }}
+        className="relative max-w-4xl max-h-full"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          onClick={onClose}
+          className="absolute -top-12 right-0 text-white hover:text-gray-300 transition-colors z-10"
+        >
+          <FaTimes className="text-2xl" />
+        </button>
+        <img
+          src={imageUrl}
+          alt="Enlarged certificate"
+          className="max-w-full max-h-[90vh] object-contain rounded-lg"
+        />
+      </motion.div>
+    </motion.div>
+  );
+};
+
+// Certificate Card Component
+const CertificateCard = ({ cert, onEnlarge }) => {
+  return (
+    <div className="bg-gray-800 p-6 rounded-xl border border-gray-700 hover:border-green-500 transition-colors group">
+      {/* Certificate Image */}
+      <div className="relative mb-4 overflow-hidden rounded-lg bg-gray-700">
+        <img
+          src={cert.image}
+          alt={`${cert.title} certificate`}
+          className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105 cursor-pointer"
+          onClick={() => onEnlarge(cert.image)}
+          onError={(e) => {
+            e.target.style.display = 'none';
+            e.target.nextSibling.style.display = 'flex';
+          }}
+        />
+        <div className="hidden absolute inset-0 items-center justify-center flex-col">
+          <FaFilePdf className="text-4xl text-gray-400 mb-2" />
+          <span className="text-gray-400 text-sm">Certificate Image</span>
+        </div>
+
+        {/* Enlarge Button */}
+        <button
+          onClick={() => onEnlarge(cert.image)}
+          className="absolute top-2 right-2 bg-black bg-opacity-50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-opacity-70"
+        >
+          <FaExpand className="text-sm" />
+        </button>
+      </div>
+
+      {/* Certificate Details */}
+      <div className="flex justify-between items-start mb-3">
+        <h4 className="text-lg font-bold text-white">{cert.title}</h4>
+        <span className="text-green-400 text-sm font-semibold">{cert.date}</span>
+      </div>
+      <p className="text-gray-300 font-medium mb-3">{cert.issuer}</p>
+      {cert.description && (
+        <p className="text-gray-400 text-sm mb-4">{cert.description}</p>
+      )}
+      <div className="flex flex-wrap gap-2">
+        {cert.skills.map((skill, i) => (
+          <span key={i} className="bg-gray-700 text-blue-400 px-2 py-1 rounded text-xs">
+            {skill}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Experience Card Component with Certificate
+const ExperienceCard = ({ exp, onEnlarge }) => {
+  return (
+    <div className="bg-gray-800 p-6 rounded-xl border-l-4 border-green-500 group">
+      <div className="flex justify-between items-start mb-3">
+        <h4 className="text-xl font-bold text-white">{exp.role}</h4>
+        <span className="text-green-400 text-sm font-semibold">{exp.period}</span>
+      </div>
+      <p className="text-gray-300 font-medium mb-2">{exp.company}</p>
+      <p className="text-gray-400 text-sm mb-3">{exp.location}</p>
+      <p className="text-gray-300 mb-4">{exp.description}</p>
+
+      {/* Experience Certificate Image */}
+      {exp.certificate && (
+        <div className="mt-4 mb-4">
+          <div className="relative overflow-hidden rounded-lg bg-gray-700">
+            <img
+              src={exp.certificate}
+              alt={`${exp.role} certificate`}
+              className="w-full h-32 object-cover transition-transform duration-300 group-hover:scale-105 cursor-pointer"
+              onClick={() => onEnlarge(exp.certificate)}
+              onError={(e) => {
+                e.target.style.display = 'none';
+                e.target.nextSibling.style.display = 'flex';
+              }}
+            />
+            <div className="hidden absolute inset-0 items-center justify-center flex-col">
+              <FaFilePdf className="text-3xl text-gray-400 mb-2" />
+              <span className="text-gray-400 text-sm">Experience Certificate</span>
+            </div>
+
+            {/* Enlarge Button */}
+            <button
+              onClick={() => onEnlarge(exp.certificate)}
+              className="absolute top-2 right-2 bg-black bg-opacity-50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-opacity-70"
+            >
+              <FaExpand className="text-sm" />
+            </button>
+          </div>
+        </div>
+      )}
+
+      <div className="flex flex-wrap gap-2">
+        {exp.skills.map((skill, i) => (
+          <span key={i} className="bg-gray-700 text-green-400 px-3 py-1 rounded-full text-sm">
+            {skill}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// FIXED: Correct component definition with forwardRef
+const AnalyticsProjectsSection = React.forwardRef((props, ref) => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [playingVideo, setPlayingVideo] = useState(null);
+  const [enlargedImage, setEnlargedImage] = useState(null);
   const videoRefs = useRef({});
 
   useEffect(() => {
@@ -34,7 +172,7 @@ const AnalyticsProjectsSection = () => {
           displayOrder: project.displayOrder || 999
         }));
         transformedProjects.sort((a, b) => a.displayOrder - b.displayOrder);
-        
+
         setProjects(transformedProjects);
         setError(null);
       } catch (err) {
@@ -48,20 +186,17 @@ const AnalyticsProjectsSection = () => {
     fetchProjects();
   }, []);
 
-
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           const videoId = entry.target.dataset.videoId;
           if (entry.isIntersecting) {
-            
             if (videoRefs.current[videoId] && playingVideo !== videoId) {
               videoRefs.current[videoId].play().catch(console.error);
               setPlayingVideo(videoId);
             }
           } else {
-            
             if (videoRefs.current[videoId] && playingVideo === videoId) {
               videoRefs.current[videoId].pause();
               setPlayingVideo(null);
@@ -69,10 +204,9 @@ const AnalyticsProjectsSection = () => {
           }
         });
       },
-      { threshold: 0.5 } 
+      { threshold: 0.5 }
     );
 
-    
     Object.values(videoRefs.current).forEach(video => {
       if (video) observer.observe(video);
     });
@@ -88,7 +222,6 @@ const AnalyticsProjectsSection = () => {
       video.pause();
       setPlayingVideo(null);
     } else {
-      
       if (playingVideo && videoRefs.current[playingVideo]) {
         videoRefs.current[playingVideo].pause();
       }
@@ -98,12 +231,19 @@ const AnalyticsProjectsSection = () => {
   };
 
   const handleVideoEnd = (projectId) => {
-    
     const video = videoRefs.current[projectId];
     if (video) {
       video.currentTime = 0;
       video.play().catch(console.error);
     }
+  };
+
+  const handleEnlargeImage = (imageUrl) => {
+    setEnlargedImage(imageUrl);
+  };
+
+  const handleCloseModal = () => {
+    setEnlargedImage(null);
   };
 
   const containerVariants = {
@@ -127,7 +267,6 @@ const AnalyticsProjectsSection = () => {
     }
   };
 
- 
   if (loading) {
     return (
       <section className="px-6 py-20 bg-gradient-to-b from-gray-900 to-black">
@@ -150,13 +289,12 @@ const AnalyticsProjectsSection = () => {
     );
   }
 
-  
   if (error) {
     return (
       <section className="px-6 py-20 bg-gradient-to-b from-gray-900 to-black">
         <div className="max-w-7xl mx-auto text-center">
           <div className="text-red-400 text-xl mb-4">⚠️ {error}</div>
-          <button 
+          <button
             onClick={() => window.location.reload()}
             className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg transition-colors"
           >
@@ -168,7 +306,7 @@ const AnalyticsProjectsSection = () => {
   }
 
   return (
-    <section className="px-6 py-20 bg-gradient-to-b from-gray-900 to-black">
+    <section className="px-6 py-20 bg-gradient-to-b from-gray-900 to-black" ref={ref}>
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -180,7 +318,7 @@ const AnalyticsProjectsSection = () => {
             Data Analytics Projects
           </h2>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Transforming raw data into actionable insights through advanced analytics, 
+            Transforming raw data into actionable insights through advanced analytics,
             visualization, and machine learning
           </p>
         </motion.div>
@@ -221,8 +359,6 @@ const AnalyticsProjectsSection = () => {
                           <source src={project.videoUrl} type="video/mp4" />
                           Your browser does not support the video tag.
                         </video>
-                        
-                        
                       </>
                     ) : (
                       // Fallback for projects without video
@@ -249,7 +385,7 @@ const AnalyticsProjectsSection = () => {
                         </div>
                       </div>
                     )}
-                    
+
                     {/* Category Badge */}
                     <div className="absolute top-4 left-4">
                       <span className="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
@@ -276,8 +412,6 @@ const AnalyticsProjectsSection = () => {
                         </span>
                       )}
                     </div>
-
-                    
                   </div>
 
                   {/* Content Section */}
@@ -285,7 +419,7 @@ const AnalyticsProjectsSection = () => {
                     <h3 className="text-2xl font-bold text-white mb-3">
                       {project.title}
                     </h3>
-                    
+
                     <p className="text-gray-300 mb-4 leading-relaxed">
                       {project.description}
                     </p>
@@ -344,7 +478,7 @@ const AnalyticsProjectsSection = () => {
                           </a>
                         )}
                       </div>
-                      
+
                       <a
                         href={project.githubUrl || project.linkedinUrl || '#'}
                         target="_blank"
@@ -365,86 +499,76 @@ const AnalyticsProjectsSection = () => {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 text-center"
+              className="mt-20 flex flex-wrap justify-center gap-10 text-center"
             >
-              <div className="bg-gray-800 rounded-xl p-6">
+              <div className="bg-gray-800 rounded-xl p-6 w-48">
                 <div className="text-3xl font-bold text-green-400 mb-2">{projects.length}+</div>
                 <div className="text-gray-300">Projects Completed</div>
               </div>
-              
-              <div className="bg-gray-800 rounded-xl p-6">
+
+              <div className="bg-gray-800 rounded-xl p-6 w-48">
                 <div className="text-3xl font-bold text-green-400 mb-2">
                   {projects.filter(p => p.hasVideo).length}+
                 </div>
                 <div className="text-gray-300">Video Demos</div>
               </div>
-
             </motion.div>
           </>
         )}
-      </div>
-      {/* Experience & Certifications for Analytics */}
-<div className="mt-20">
-  <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-    {/* Analytics Experience */}
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-    >
-      <h3 className="text-3xl font-bold mb-8 text-green-400">Analytics Experience</h3>
-      <div className="space-y-6">
-        {analyticsExperience.map((exp, index) => (
-          <div key={exp.id} className="bg-gray-800 p-6 rounded-xl border-l-4 border-green-500">
-            <div className="flex justify-between items-start mb-3">
-              <h4 className="text-xl font-bold text-white">{exp.role}</h4>
-              <span className="text-green-400 text-sm font-semibold">{exp.period}</span>
-            </div>
-            <p className="text-gray-300 font-medium mb-2">{exp.company}</p>
-            <p className="text-gray-400 text-sm mb-3">{exp.location}</p>
-            <p className="text-gray-300 mb-4">{exp.description}</p>
-            <div className="flex flex-wrap gap-2">
-              {exp.skills.map((skill, i) => (
-                <span key={i} className="bg-gray-700 text-green-400 px-3 py-1 rounded-full text-sm">
-                  {skill}
-                </span>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-    </motion.div>
 
-    {/* Analytics Certifications */}
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-    >
-      <h3 className="text-3xl font-bold mb-8 text-green-400">Analytics Certifications</h3>
-      <div className="space-y-6">
-        {analyticsCertifications.map((cert, index) => (
-          <div key={cert.id} className="bg-gray-800 p-6 rounded-xl border border-gray-700 hover:border-green-500 transition-colors">
-            <div className="flex justify-between items-start mb-3">
-              <h4 className="text-lg font-bold text-white">{cert.title}</h4>
-              <span className="text-green-400 text-sm font-semibold">{cert.date}</span>
-            </div>
-            <p className="text-gray-300 font-medium mb-3">{cert.issuer}</p>
-            <div className="flex flex-wrap gap-2">
-              {cert.skills.map((skill, i) => (
-                <span key={i} className="bg-gray-700 text-blue-400 px-2 py-1 rounded text-xs">
-                  {skill}
-                </span>
-              ))}
-            </div>
+        {/* Experience & Certifications for Analytics */}
+        <div className="mt-20">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            {/* Analytics Experience */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <h3 className="text-3xl font-bold mb-8 text-green-400">Analytics Experience</h3>
+              <div className="space-y-6">
+                {analyticsExperience.map((exp, index) => (
+                  <ExperienceCard
+                    key={exp.id}
+                    exp={exp}
+                    onEnlarge={handleEnlargeImage}
+                  />
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Analytics Certifications */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <h3 className="text-3xl font-bold mb-8 text-green-400">Analytics Certifications</h3>
+              <div className="space-y-6">
+                {analyticsCertifications.map((cert, index) => (
+                  <CertificateCard
+                    key={cert.id}
+                    cert={cert}
+                    onEnlarge={handleEnlargeImage}
+                  />
+                ))}
+              </div>
+            </motion.div>
           </div>
-        ))}
+        </div>
       </div>
-    </motion.div>
-  </div>
-</div>
+
+      {/* Image Modal */}
+      <AnimatePresence>
+        {enlargedImage && (
+          <ImageModal
+            imageUrl={enlargedImage}
+            onClose={handleCloseModal}
+          />
+        )}
+      </AnimatePresence>
     </section>
   );
-};
+});
 
 export default AnalyticsProjectsSection;
