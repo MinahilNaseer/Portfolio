@@ -1,5 +1,15 @@
 {
   "projects": {
     "default": "portfolio-14b3d"
-  }
+  },
+  "targets": {
+    "portfolio-14b3d": {
+      "hosting": {
+        "target-name": [
+          "minahilnaseerse"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }
