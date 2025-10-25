@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { db } from '../src/firebase/config';
+import { db } from './firebase/config';
 import { collection, addDoc } from 'firebase/firestore';
 import { getProjects } from "./services/projects";
 import emailjs from '@emailjs/browser';
