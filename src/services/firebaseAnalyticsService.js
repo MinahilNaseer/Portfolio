@@ -1,5 +1,5 @@
 import { collection, addDoc, getDocs, doc, setDoc, writeBatch } from 'firebase/firestore';
-import { db } from '../firebase/config';
+import { db } from '../firebase/config.js';
 import { analyticsProjectsData } from '../data/analyticsProjectsData';
 
 export const uploadAnalyticsProjectsToFirebase = async () => {
