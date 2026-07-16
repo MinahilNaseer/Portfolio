@@ -3,13 +3,14 @@ import { db } from './firebase/config.js';
 import { collection, addDoc } from 'firebase/firestore';
 import { getProjects } from "./services/projects";
 import emailjs from '@emailjs/browser';
-import SplitScreenHero from './components/hero/SplitScreenHero';
-import DevelopmentContent from './components/layout/DevelopmentContent';
-import AnalyticsContent from './components/layout/AnalyticsContent';
+// import SplitScreenHero from './components/hero/SplitScreenHero';
+// import DevelopmentContent from './components/layout/DevelopmentContent';
+// import AnalyticsContent from './components/layout/AnalyticsContent';
 import { initializeAnalyticsProjects } from './services/firebaseAnalyticsService';
+import CombinedContent from "./components/layout/CombinedContent.jsx";
 
 const PortfolioLanding = () => {
-  const [activeSection, setActiveSection] = useState(null);
+  // const [activeSection, setActiveSection] = useState(null);
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -77,41 +78,22 @@ const PortfolioLanding = () => {
   }, []);
 
   return (
-    <div className="bg-black text-white min-h-screen">
-      {activeSection === null && <SplitScreenHero activeSection={activeSection} setActiveSection={setActiveSection} />}
-      {activeSection === 'development' && (
-        <DevelopmentContent
-          scrollToContact={scrollToContact}
-          scrollToWork={scrollToWork}
-          projects={projects}
-          loading={loading}
-          error={error}
-          contactRef={contactRef}
-          workRef={workRef}
-          formData={formData}
-          setFormData={setFormData}
-          formStatus={formStatus}
-          handleSubmit={handleSubmit}
-          onBack={() => setActiveSection(null)}
-        />
-      )}
-      {activeSection === 'analytics' && 
-      <AnalyticsContent 
-      onBack={() => setActiveSection(null)} 
+  <div className="bg-black text-white min-h-screen">
+    <CombinedContent
       scrollToContact={scrollToContact}
-          scrollToWork={scrollToWork}
-          projects={projects}
-          loading={loading}
-          error={error}
-          contactRef={contactRef}
-          workRef={workRef}
-          formData={formData}
-          setFormData={setFormData}
-          formStatus={formStatus}
-          handleSubmit={handleSubmit}
-      />}
-    </div>
-  );
+      scrollToWork={scrollToWork}
+      projects={projects}
+      loading={loading}
+      error={error}
+      contactRef={contactRef}
+      workRef={workRef}
+      formData={formData}
+      setFormData={setFormData}
+      formStatus={formStatus}
+      handleSubmit={handleSubmit}
+    />
+  </div>
+);
 }
 
 export default PortfolioLanding;

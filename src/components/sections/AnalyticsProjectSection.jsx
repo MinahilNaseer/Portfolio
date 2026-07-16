@@ -517,56 +517,124 @@ const AnalyticsProjectsSection = React.forwardRef((props, ref) => {
         )}
 
         {/* Experience & Certifications for Analytics */}
-        <div className="mt-20">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* Analytics Experience */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <h3 className="text-3xl font-bold mb-8 text-green-400">Analytics Experience</h3>
-              <div className="space-y-6">
-                {analyticsExperience.map((exp, index) => (
-                  <ExperienceCard
-                    key={exp.id}
-                    exp={exp}
-                    onEnlarge={handleEnlargeImage}
-                  />
-                ))}
-              </div>
-            </motion.div>
+        {/* Experience & Certifications */}
+        <div className="mt-20 space-y-24">
 
-            {/* Analytics Certifications */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <h3 className="text-3xl font-bold mb-8 text-green-400">Analytics Certifications</h3>
-              <div className="space-y-6">
-                {analyticsCertifications.map((cert, index) => (
-                  <CertificateCard
-                    key={cert.id}
-                    cert={cert}
-                    onEnlarge={handleEnlargeImage}
-                  />
-                ))}
-              </div>
-            </motion.div>
+          {/* ================= DEVELOPMENT ================= */}
+          <div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+
+              {/* Development Experience */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+              >
+                <h3 className="text-3xl font-bold mb-8 text-green-400">
+                  Development Experience
+                </h3>
+
+                <div className="space-y-6">
+                  {developmentExperience.map((exp) => (
+                    <ExperienceCard
+                      key={exp.id}
+                      exp={exp}
+                      onEnlarge={handleEnlargeImage}
+                    />
+                  ))}
+                </div>
+              </motion.div>
+
+              {/* Development Certifications */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+              >
+                <h3 className="text-3xl font-bold mb-8 text-green-400">
+                  Development Certifications
+                </h3>
+
+                <div className="space-y-6">
+                  {developmentCertifications.map((cert) => (
+                    <CertificateCard
+                      key={cert.id}
+                      cert={cert}
+                      onEnlarge={handleEnlargeImage}
+                    />
+                  ))}
+                </div>
+              </motion.div>
+
+            </div>
           </div>
-        </div>
-      </div>
 
-      {/* Image Modal */}
-      <AnimatePresence>
-        {enlargedImage && (
-          <ImageModal
-            imageUrl={enlargedImage}
-            onClose={handleCloseModal}
-          />
-        )}
-      </AnimatePresence>
+          {/* ================= ANALYTICS ================= */}
+          <div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+
+              {/* Analytics Experience */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+              >
+                <h3 className="text-3xl font-bold mb-8 text-green-400">
+                  Analytics Experience
+                </h3>
+
+                <div className="space-y-6">
+                  {analyticsExperience.map((exp) => (
+                    <ExperienceCard
+                      key={exp.id}
+                      exp={exp}
+                      onEnlarge={handleEnlargeImage}
+                    />
+                  ))}
+                </div>
+              </motion.div>
+
+              {/* Analytics Certifications */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+              >
+                <h3 className="text-3xl font-bold mb-8 text-green-400">
+                  Analytics Certifications
+                </h3>
+
+                <div className="space-y-6">
+                  {analyticsCertifications.map((cert) => (
+                    <CertificateCard
+                      key={cert.id}
+                      cert={cert}
+                      onEnlarge={handleEnlargeImage}
+                    />
+                  ))}
+                </div>
+              </motion.div>
+
+            </div>
+          </div>
+
+
+
+
+
+
+        </div>
+
+        {/* Image Modal */}
+        <AnimatePresence>
+          {enlargedImage && (
+            <ImageModal
+              imageUrl={enlargedImage}
+              onClose={handleCloseModal}
+            />
+          )}
+        </AnimatePresence>
+        </div>
     </section>
   );
 });

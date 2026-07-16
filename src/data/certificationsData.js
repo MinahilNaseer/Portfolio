@@ -23,30 +23,81 @@ export const developmentCertifications = [
 export const analyticsCertifications = [
   {
     id: 1,
+    title: "Exploratory Data Analysis for Machine Learning",
+    issuer: "IBM",
+    date: "Jun 2026",
+    skills: [
+      "Machine Learning",
+      "Hypothesis Testing",
+      "Exploratory Data Analysis",
+      "Python",
+      "Data Visualization"
+    ],
+    type: "analytics",
+    image: "/images/ibm-certificate-EDA.jpg",
+    description:
+      "Performed exploratory data analysis using statistical techniques and visualization to prepare datasets for machine learning."
+  },
+
+  {
+    id: 2,
+    title: "Foundations of Data Science",
+    issuer: "Google",
+    date: "Nov 2025",
+    skills: [
+      "Data Analytics",
+      "Datasets",
+      "Machine Learning",
+      "Python",
+      "Statistics"
+    ],
+    type: "analytics",
+    image: "/images/google-FoundationofDS.jpeg",
+    description:
+      "Fundamental concepts of Data Science including data collection, preprocessing, analysis and machine learning."
+  },
+
+  {
+    id: 3,
     title: "Data Science and Analytics Career Paths and Certifications: First Steps",
-    issuer: "LinkedIn",
+    issuer: "LinkedIn Learning",
     date: "Sep 2025",
-    skills: ["Tech Career Skills", "Career Path Planning", "Data Analytics", "Data Science"],
+    skills: [
+      "Career Planning",
+      "Data Analytics",
+      "Data Science"
+    ],
     type: "analytics",
     image: "/images/Data-Science-Cert.png"
   },
+
   {
-    id: 2,
+    id: 4,
     title: "Power BI: Dashboards for Beginners",
-    issuer: "LinkedIn",
+    issuer: "LinkedIn Learning",
     date: "Sep 2025",
-    skills: ["Dashboards", "Microsoft Power BI", "Data Visualization"],
+    skills: [
+      "Power BI",
+      "Dashboards",
+      "Data Visualization"
+    ],
     type: "analytics",
     image: "/images/PowerBI-Cert.png"
   },
+
   {
-    id: 3,
+    id: 5,
     title: "Oracle Primavera P6 Professional Project Management Fundamentals",
     issuer: "Oracle",
     date: "Dec 2024",
-    skills: ["Oracle Primavera", "Primavera P6", "Project Management"],
+    skills: [
+      "Project Management",
+      "Oracle Primavera",
+      "Planning"
+    ],
     type: "analytics",
-    description: "Project management fundamentals applicable to data analytics projects",
-    image: "/images/oracle-cert.png"
+    image: "/images/oracle-cert.png",
+    description:
+      "Project planning and management methodologies applicable to analytics and software projects."
   }
 ];
